@@ -4,6 +4,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CredentialsDto } from '../dto/credentials.dto';
 import { User, UserDocument } from '../schemas/user.schema';
+import { hash } from 'bcrypt';
+
 
 @Injectable()
 export class AuthenticationService {
@@ -21,6 +23,8 @@ export class AuthenticationService {
     if(existingUser) {
       throw new ConflictException('User already exists');
     }
+
+    credentials.password = await hash(credentials.password, 10);
 
     const newUser = new this.userModel(credentials);
     return newUser.save()
