@@ -5,7 +5,7 @@ import { UserDocument } from '../schemas/user.schema';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
+export class LocalStrategyService extends PassportStrategy(Strategy) {
   constructor(private authenticationService: AuthenticationService) {
     super();
   }

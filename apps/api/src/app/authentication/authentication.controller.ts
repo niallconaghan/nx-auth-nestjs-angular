@@ -1,6 +1,7 @@
-import { Body, Controller, Next, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Body, Controller, Get, Next, Post, Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CredentialsDto } from './dto/credentials.dto'
+import { JwtAuthGuard } from './guards/jwt.guard';
+import { LocalAuthGuard } from './guards/local.guard';
 import { AuthenticationService } from './services/authentication.service';
 
 @Controller('authentication')
@@ -8,7 +9,7 @@ export class AuthenticationController {
   
   constructor(private authenticationService: AuthenticationService) {}
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   @UsePipes(new ValidationPipe({
     whitelist: true,
@@ -16,6 +17,13 @@ export class AuthenticationController {
   }))
   login(@Body() credentials: CredentialsDto) {
     return this.authenticationService.login(credentials);
+  }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getProfile(@Request() req: any) {
+    return req.user;
   }
 
   @Post('register')
