@@ -5,12 +5,13 @@ import { Model } from 'mongoose';
 import { CredentialsDto } from '../dto/credentials.dto';
 import { User, UserDocument } from '../schemas/user.schema';
 import { hash } from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
 export class AuthenticationService {
 
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private jwtService: JwtService) { }
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private jwtService: JwtService, private configService: ConfigService) { }
 
   async login(credentials: CredentialsDto) {
     const payload = { usename: credentials.username };
@@ -24,7 +25,7 @@ export class AuthenticationService {
       throw new ConflictException('User already exists');
     }
 
-    credentials.password = await hash(credentials.password, 10);
+    credentials.password = await hash(credentials.password, this.configService.get<number>('HASH_SALT'));
 
     const newUser = new this.userModel(credentials);
     return newUser.save()
