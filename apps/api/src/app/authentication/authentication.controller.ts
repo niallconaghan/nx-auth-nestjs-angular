@@ -20,7 +20,6 @@ export class AuthenticationController {
     return this.authenticationService.login(credentials);
   }
 
-
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req: any) {

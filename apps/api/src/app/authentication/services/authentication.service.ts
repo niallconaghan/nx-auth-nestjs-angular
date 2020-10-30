@@ -40,7 +40,7 @@ export class AuthenticationService {
     return this.userModel.findOne({ username }).exec();
   }
 
-  private generateTokens(payload: {username: string}): { access_token: string, refresh_token: string } {
+  private generateTokens(payload: { username: string }): { access_token: string, refresh_token: string } {
     return {
       access_token: this.jwtService.sign(payload),
       refresh_token: this.jwtService.sign(payload, { expiresIn: '24h' })
