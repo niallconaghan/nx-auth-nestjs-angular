@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Next, Post, Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CredentialsDto } from './dto/credentials.dto'
 import { JwtAuthGuard } from './guards/jwt.guard';
+import { JwtRefreshAuthGuard } from './guards/jwt-refresh.guard';
 import { LocalAuthGuard } from './guards/local.guard';
 import { AuthenticationService } from './services/authentication.service';
 
@@ -33,5 +34,11 @@ export class AuthenticationController {
   }))
   register(@Body() credentials: CredentialsDto) {
     return this.authenticationService.register(credentials);
+  }
+
+  @UseGuards(JwtRefreshAuthGuard)
+  @Post('refresh')
+  refresh(@Request() req: any) {
+    return this.authenticationService.refresh(req?.user?.username);
   }
 }

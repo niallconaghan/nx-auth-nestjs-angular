@@ -14,8 +14,8 @@ export class AuthenticationService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private jwtService: JwtService, private configService: ConfigService) { }
 
   async login(credentials: CredentialsDto) {
-    const payload = { usename: credentials.username };
-    return { access_token: this.jwtService.sign(payload) };
+    const payload = { username: credentials.username };
+    return this.generateTokens(payload);
   }
 
   async register(credentials: CredentialsDto): Promise<User> {
@@ -31,7 +31,19 @@ export class AuthenticationService {
     return newUser.save()
   }
 
+  async refresh(username: string) {
+    const payload = { username };
+    return this.generateTokens(payload);
+  }
+
   async findOne(username: string): Promise<UserDocument> {
     return this.userModel.findOne({ username }).exec();
+  }
+
+  private generateTokens(payload: {username: string}): { access_token: string, refresh_token: string } {
+    return {
+      access_token: this.jwtService.sign(payload),
+      refresh_token: this.jwtService.sign(payload, { expiresIn: '24h' })
+    };
   }
 }
