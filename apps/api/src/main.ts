@@ -13,6 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api/v1';
   app.setGlobalPrefix(globalPrefix);
+  app.enableCors();
   const configService = app.get(ConfigService);
   const port = configService.get<string>('PORT') || 3333;
   await app.listen(port, () => {
