@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-
+import { AuthenticationService } from './services/authentication.service'
 @Component({
   selector: 'nx-auth-nestjs-angular-authentication',
   templateUrl: './authentication.component.html',
@@ -12,7 +12,7 @@ export class AuthenticationComponent implements OnInit {
   password: FormControl;
   formGroup: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private authenticationService: AuthenticationService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.username = new FormControl('');
@@ -23,6 +23,13 @@ export class AuthenticationComponent implements OnInit {
     });
   }
 
-  submit(): void {
+  login(): void {
+    this.authenticationService.login(this.formGroup.value).subscribe((res) => {
+      console.log(res);
+    });
+  }
+
+  register(): void {
+    
   }
 }
