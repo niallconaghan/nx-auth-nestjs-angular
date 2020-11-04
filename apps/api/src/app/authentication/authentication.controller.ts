@@ -21,9 +21,9 @@ export class AuthenticationController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async getProfile(@Request() req: any) {
-    return req.user;
+  @Get('content')
+  async getContent(@Request() req: any) {
+    return { content: 'content' }
   }
 
   @Post('register')
