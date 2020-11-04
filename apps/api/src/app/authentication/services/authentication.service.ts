@@ -43,7 +43,7 @@ export class AuthenticationService {
   private generateTokens(payload: { username: string }): { access_token: string, refresh_token: string } {
     return {
       access_token: this.jwtService.sign(payload),
-      refresh_token: this.jwtService.sign(payload, { expiresIn: '24h' })
+      refresh_token: this.jwtService.sign(payload, { expiresIn: '120s' })
     };
   }
 }

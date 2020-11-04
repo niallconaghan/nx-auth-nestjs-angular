@@ -10,17 +10,22 @@ import { Observable, of, throwError } from 'rxjs';
 import { StorageService } from '../../core/services/storage.service';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthenticationService } from '../services/authentication.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
-  constructor(private storageService: StorageService, private authenticationService: AuthenticationService) { }
+  constructor(private storageService: StorageService, private authenticationService: AuthenticationService, private router: Router) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (request.url.includes('/content')) {
       console.log('Intercepting:', request.url);
       const req = this.addBearerToken(request);
       return next.handle(req).pipe(catchError((err) => this.handleError(err, req, next)));
+    }
+    
+    if (request.url.includes('/refresh')) {
+      return next.handle(request).pipe(catchError((err) => this.handleRefreshError(err)));
     }
 
     return next.handle(request);
@@ -34,6 +39,16 @@ export class TokenInterceptor implements HttpInterceptor {
         const newRequest = this.addBearerToken(req);
         return next.handle(newRequest);
       }));
+    }
+    return throwError(error);
+  }
+
+  private handleRefreshError(error: HttpErrorResponse): Observable<any> {
+    if (error.status === 401) {
+      console.log('Unauthorized request, can not refresh token, logging out');
+      this.authenticationService.logout();
+      this.router.navigate(['authentication']);
+      return of(error.message);
     }
     return throwError(error);
   }
