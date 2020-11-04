@@ -1,6 +1,7 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthenticationResponse } from './interfaces/auth-response';
 import { AuthenticationService } from './services/authentication.service'
 @Component({
@@ -14,7 +15,8 @@ export class AuthenticationComponent implements OnInit {
   password: FormControl;
   formGroup: FormGroup;
 
-  constructor(private authenticationService: AuthenticationService, private formBuilder: FormBuilder) { }
+  constructor(private authenticationService: AuthenticationService,
+    private router: Router, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.username = new FormControl('');
@@ -23,25 +25,15 @@ export class AuthenticationComponent implements OnInit {
       username: this.username,
       password: this.password
     });
-
-    if(this.authenticationService.isAuthenticated()) {
-      this.formGroup.disable();
-    }
-
   }
 
   login(): void {
     this.authenticationService.login(this.formGroup.value).subscribe((res: AuthenticationResponse) => {
-      this.formGroup.disable();
+      this.router.navigate(['content']);
     });
   }
 
   register(): void {
-    
-  }
 
-  logout(): void {
-    this.authenticationService.logout();
-    this.formGroup.enable();
   }
 }

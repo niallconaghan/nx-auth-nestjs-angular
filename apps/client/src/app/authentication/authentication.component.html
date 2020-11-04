@@ -1,8 +1,8 @@
 <div class="container">
-  <div class="card" style="width: 350px;">
+  <div class="card">
     <div class="card-body mb-2">
       <h5 class="card-title">Login</h5>
-      <form [formGroup]="formGroup" *ngIf="!formGroup.disabled">
+      <form [formGroup]="formGroup">
         <div class="form-group">
           <label>Username</label>
           <input formControlName="username" type="email" class="form-control">
@@ -15,9 +15,7 @@
           <button (click)="login()" type="button" class="btn btn-block btn-primary">Login</button>
           <button (click)="register()" type="button" class="btn btn-block btn-primary-link">Regsiter</button>
         </div>
-
       </form>
-      <button (click)="logout()" *ngIf="formGroup.disabled "type="button" class="btn btn-block btn-primary">Logout</button>
     </div>
   </div>
 </div>

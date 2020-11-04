@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthenticationGuard } from './authentication/guards/authentication.guard'
+import { ContentGuard } from './authentication/guards/content.guard'
 
 const routes: Routes = [
   {
@@ -9,7 +11,13 @@ const routes: Routes = [
   },
   {
     path: 'authentication',
-    loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule)
+    loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule),
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: 'content',
+    loadChildren: () => import('./content/content.module').then(m => m.ContentModule),
+    canActivate: [ContentGuard]
   }
 ]
 
