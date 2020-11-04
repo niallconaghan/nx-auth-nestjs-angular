@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthenticationService } from '../authentication/services/authentication.service';
 
 @Component({
   selector: 'nx-auth-nestjs-angular-content',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContentComponent implements OnInit {
 
-  constructor() { }
+  constructor(private authenticationService: AuthenticationService, private router: Router) { }
 
   ngOnInit(): void {
   }
 
+  logout(): void {
+    this.authenticationService.logout();
+    this.router.navigate(['authentication']);
+  }
 }
