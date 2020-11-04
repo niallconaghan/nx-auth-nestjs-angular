@@ -15,14 +15,23 @@ export class AuthenticationService {
 
   login(credentials: Credentials): Observable<AuthenticationResponse> {
     return this.httpClient.post<AuthenticationResponse>(`${environment.apiUrl}/authentication/login`, credentials)
-    .pipe(tap((res: AuthenticationResponse) => {
-      this.storageService.set('access_token', res.access_token);
-      this.storageService.set('refresh_token', res.refresh_token);
-    }))
+      .pipe(tap((res: AuthenticationResponse) => {
+        this.storageService.set('access_token', res.access_token);
+        this.storageService.set('refresh_token', res.refresh_token);
+      }))
   }
 
   register(credentials: Credentials): Observable<AuthenticationResponse> {
     return null;
+  }
+
+  refresh(): Observable<AuthenticationResponse> {
+    return this.httpClient.post<AuthenticationResponse>(`${environment.apiUrl}/authentication/refresh`, {
+      refresh_token: this.storageService.get('refresh_token')
+    }).pipe(tap((res: AuthenticationResponse) => {
+      this.storageService.set('access_token', res.access_token);
+      this.storageService.set('refresh_token', res.refresh_token);
+    }))
   }
 
   logout(): void {
