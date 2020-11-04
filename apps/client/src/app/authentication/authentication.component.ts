@@ -1,8 +1,8 @@
-import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationResponse } from './interfaces/auth-response';
+import { Credentials } from './interfaces/credentials';
 import { AuthenticationService } from './services/authentication.service'
 @Component({
   selector: 'nx-auth-nestjs-angular-authentication',
@@ -34,6 +34,7 @@ export class AuthenticationComponent implements OnInit {
   }
 
   register(): void {
-
+    this.authenticationService.register(this.formGroup.value).subscribe((res: Partial<Credentials>) =>
+      console.log(`${res.username} registered, you can now login with your username and password`))
   }
 }

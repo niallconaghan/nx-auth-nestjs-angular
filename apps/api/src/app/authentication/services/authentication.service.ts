@@ -6,6 +6,7 @@ import { CredentialsDto } from '../dto/credentials.dto';
 import { User, UserDocument } from '../schemas/user.schema';
 import { hash } from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { use } from 'passport';
 
 
 @Injectable()
@@ -18,17 +19,18 @@ export class AuthenticationService {
     return this.generateTokens(payload);
   }
 
-  async register(credentials: CredentialsDto): Promise<User> {
+  async register(credentials: CredentialsDto): Promise<Partial<User>> {
     const existingUser = await this.findOne(credentials.username);
-    
-    if(existingUser) {
+
+    if (existingUser) {
       throw new ConflictException('User already exists');
     }
 
-    credentials.password = await hash(credentials.password, this.configService.get<number>('HASH_SALT'));
+    credentials.password = await hash(credentials.password, 10);
 
     const newUser = new this.userModel(credentials);
-    return newUser.save()
+    const user = await newUser.save();
+    return { username: user.username }
   }
 
   async refresh(username: string) {

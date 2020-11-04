@@ -23,7 +23,7 @@ export class AuthenticationController {
   @UseGuards(JwtAuthGuard)
   @Get('content')
   async getContent(@Request() req: any) {
-    return { content: 'content' }
+    return { content: 'Protected content!' }
   }
 
   @Post('register')

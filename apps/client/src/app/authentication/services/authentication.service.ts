@@ -21,8 +21,8 @@ export class AuthenticationService {
       }))
   }
 
-  register(credentials: Credentials): Observable<AuthenticationResponse> {
-    return null;
+  register(credentials: Credentials): Observable<Partial<Credentials>> {
+    return this.httpClient.post<Partial<Credentials>>(`${environment.apiUrl}/authentication/register`, credentials)
   }
 
   refresh(): Observable<AuthenticationResponse> {
