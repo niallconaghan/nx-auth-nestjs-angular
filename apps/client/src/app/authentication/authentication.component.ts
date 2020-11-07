@@ -29,6 +29,7 @@ export class AuthenticationComponent implements OnInit {
 
   login(): void {
     this.authenticationService.login(this.formGroup.value).subscribe((res: AuthenticationResponse) => {
+      console.log(`authentication successful`);
       this.router.navigate(['content']);
     });
   }
