@@ -15,7 +15,7 @@ export class LocalStrategyService extends PassportStrategy(Strategy) {
 
     if(existingUser) {
       const passwordMatch = await compare(password, existingUser.password)
-      if(existingUser && passwordMatch) {
+      if(passwordMatch) {
         return existingUser
       }
     }
